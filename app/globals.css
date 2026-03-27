@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #fcf8f8;
+  --color-surface: #f6f3f2;
+  --color-surface-dim: #ebe7e7;
+  --color-border: #e2bfb2;
+  --color-border-subtle: #e5e2e1;
+  --color-bg-dark: #0a0a0a;
+  --color-accent: #ea580c;
+  --color-accent-dark: #cc4900;
+  --color-text: #1c1b1b;
+  --color-text-muted: #5a4138;
+  --color-text-on-dark: #ffffff;
+  --color-text-on-dark-muted: #9ca3af;
+
+  --color-cat-defense: #dc2626;
+  --color-cat-technology: #2563eb;
+  --color-cat-news: #ea580c;
+  --color-cat-guide: #059669;
+  --color-cat-company: #9333ea;
+  --color-cat-technical: #0891b2;
+  --color-cat-creative: #ea580c;
+  --color-cat-logistics: #9333ea;
+  --color-cat-agritech: #059669;
+
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+}
+
+body {
+  font-family: var(--font-body), 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), 'Space Grotesk', sans-serif;
+}
+
+/* Ticker animation */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker 30s linear infinite;
+}
