@@ -4,33 +4,39 @@ import { LatestStories } from "@/components/home/LatestStories";
 import { TrendingSection } from "@/components/home/TrendingSection";
 import { TechnicalDives } from "@/components/home/TechnicalDives";
 import { CompanySpotlight } from "@/components/home/CompanySpotlight";
-import { DirectoryTeaser } from "@/components/home/DirectoryTeaser";
 import { UAVTools } from "@/components/home/UAVTools";
 import { NewsletterBand } from "@/components/home/NewsletterBand";
 import { ServicesStrip } from "@/components/home/ServicesStrip";
 import {
-  mockSettings,
+  getSiteSettings,
   getFeaturedArticle,
   getSecondaryArticles,
   getLatestArticles,
   getTrendingArticles,
   getTechnicalArticles,
   getCompanyArticles,
-} from "@/lib/mock-data";
+} from "@/lib/sanity";
 
-export default function Home() {
-  const featured = getFeaturedArticle();
-  const secondary = getSecondaryArticles(3);
-  const latest = getLatestArticles(6);
-  const trending = getTrendingArticles(4);
-  const technical = getTechnicalArticles(4);
-  const companies = getCompanyArticles(2);
+/** Revalidate homepage every 60 seconds (ISR) */
+export const revalidate = 60;
+
+export default async function Home() {
+  const [settings, featured, secondary, latest, trending, technical, companies] =
+    await Promise.all([
+      getSiteSettings(),
+      getFeaturedArticle(),
+      getSecondaryArticles(3),
+      getLatestArticles(6),
+      getTrendingArticles(4),
+      getTechnicalArticles(4),
+      getCompanyArticles(2),
+    ]);
 
   return (
     <>
       {/* Breaking News Ticker */}
-      {mockSettings.showBreakingTicker && (
-        <BreakingTicker headlines={mockSettings.breakingHeadlines} />
+      {settings.showBreakingTicker && (
+        <BreakingTicker headlines={settings.breakingHeadlines} />
       )}
 
       {/* Hero: Featured + Secondary Articles */}
@@ -47,9 +53,6 @@ export default function Home() {
 
       {/* Company Spotlight */}
       <CompanySpotlight articles={companies} />
-
-      {/* India Drone Directory Teaser */}
-      <DirectoryTeaser />
 
       {/* UAV Tools */}
       <UAVTools />

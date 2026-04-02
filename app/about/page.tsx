@@ -132,7 +132,7 @@ export default function AboutPage() {
       </div>
 
       {/* Newsletter + CTA — combined dark bottom section */}
-      <div className="bg-bg-dark">
+      <div className="">
         {/* Newsletter band */}
         <div className="bg-accent px-8 py-12">
           <div className="max-w-2xl mx-auto text-center">
@@ -151,10 +151,10 @@ export default function AboutPage() {
         {/* CTA */}
         <div className="px-8 py-16">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold font-heading text-white mb-4">
+            <h2 className="text-3xl font-bold font-heading text-text mb-4">
               Want to Work With Us?
             </h2>
-            <p className="text-text-on-dark-muted mb-8">
+            <p className="text-text-muted mb-8">
               We partner with drone companies for media coverage, sponsored
               content, and consultancy engagements.
             </p>
@@ -168,7 +168,7 @@ export default function AboutPage() {
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 border-2 border-white/20 text-white px-8 py-4 font-bold uppercase tracking-widest hover:border-white transition-all"
+                className="inline-flex items-center justify-center gap-2 border-2 border-border-subtle text-text px-8 py-4 font-bold uppercase tracking-widest hover:border-text transition-all"
               >
                 Contact Us
               </Link>

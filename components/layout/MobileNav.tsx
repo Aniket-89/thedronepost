@@ -15,7 +15,6 @@ const ARTICLE_CATEGORIES = [
 
 const MOBILE_LINKS = [
   { label: "Tools", href: "/tools" },
-  { label: "Directory", href: "/directory" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
@@ -35,7 +34,6 @@ export function MobileNav({
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
-      setArticlesOpen(false);
     }
     return () => {
       document.body.style.overflow = "";

@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         email,
-        listIds: [2], // Update with your Brevo list ID
+        listIds: [2],
         updateEnabled: true,
       }),
     });

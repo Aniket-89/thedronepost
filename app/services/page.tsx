@@ -79,7 +79,7 @@ export default function ServicesPage() {
 
       {/* Services */}
       <div className="px-8 pb-16 space-y-8">
-        {services.map((service, i) => {
+        {services.map((service) => {
           const Icon = service.icon;
           return (
             <div
@@ -126,7 +126,7 @@ export default function ServicesPage() {
       </div>
 
       {/* CTA Band */}
-      <div className="bg-bg-dark px-8 py-16">
+      <div className="bg-bg-dark px-8 py-16 my-16">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold font-heading text-white mb-4">
             Let&apos;s Build Something Together

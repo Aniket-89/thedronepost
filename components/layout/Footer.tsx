@@ -24,11 +24,6 @@ export function Footer() {
           </h4>
           <ul className="space-y-4">
             <li>
-              <Link href="/directory" className="text-[#9CA3AF] hover:text-white transition-colors">
-                Drone Directory
-              </Link>
-            </li>
-            <li>
               <Link href="/tools" className="text-[#9CA3AF] hover:text-white transition-colors">
                 UAV Tools
               </Link>

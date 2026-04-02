@@ -1,8 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { formatDate } from "@/lib/utils";
 import { Article } from "@/lib/types";
-import { CATEGORY_LABELS, CATEGORY_TEXT_COLORS } from "@/lib/constants";
+import { CATEGORY_LABELS } from "@/lib/constants";
 import { Bookmark } from "lucide-react";
 
 // Map categories to border colors
@@ -33,6 +32,7 @@ export function ArticleCard({ article }: { article: Article }) {
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+            unoptimized
           />
         </div>
       )}

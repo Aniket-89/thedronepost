@@ -3,43 +3,27 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
-import { mockArticles } from "@/lib/mock-data";
+import { getArticleBySlug, getRelatedArticles, getAllArticleSlugs } from "@/lib/sanity";
 import { formatDate } from "@/lib/utils";
 import { CATEGORY_LABELS, CATEGORY_TEXT_COLORS } from "@/lib/constants";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { ArticleCard } from "@/components/shared/ArticleCard";
 import { NewsletterInline } from "@/components/shared/NewsletterInline";
+import { PortableTextBody } from "@/components/articles/PortableTextBody";
 
-function getArticleBySlug(slug: string) {
-  return mockArticles.find((a) => a.slug.current === slug);
-}
-
-function getRelatedArticles(article: { _id: string; category: string }, count = 3) {
-  return mockArticles
-    .filter((a) => a.category === article.category && a._id !== article._id)
-    .slice(0, count);
-}
-
-// Mock body paragraphs — replaced by Sanity Portable Text once CMS is connected
-const MOCK_BODY = [
-  "The Indian drone industry is experiencing unprecedented growth, driven by supportive government policies, increasing enterprise adoption, and a thriving startup ecosystem. This development marks a significant milestone in the country's journey toward becoming a global leader in unmanned aerial systems.",
-  "Industry experts predict that India's drone market will reach $1.8 billion by 2026, with applications spanning agriculture, defense, logistics, and urban infrastructure. The government's Production Linked Incentive (PLI) scheme has been instrumental in attracting both domestic and international investment.",
-  "Key stakeholders across the value chain — from component manufacturers to software developers and service providers — are positioning themselves to capitalize on this growing opportunity. The convergence of regulatory clarity, technological advancement, and market demand is creating a fertile environment for innovation.",
-  "The implications extend beyond commercial applications. Drone technology is being leveraged for disaster response, environmental monitoring, and infrastructure inspection, demonstrating the versatility and social impact of unmanned systems in the Indian context.",
-  "As the ecosystem matures, collaboration between industry, academia, and government agencies will be crucial. Training programs, research initiatives, and standardization efforts are laying the groundwork for sustainable growth in this transformative sector.",
-];
+/** Revalidate article pages every 60 seconds (ISR) */
+export const revalidate = 60;
 
 export async function generateStaticParams() {
-  return mockArticles.map((article) => ({
-    slug: article.slug.current,
-  }));
+  const slugs = await getAllArticleSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await props.params;
-  const article = getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     return { title: "Article Not Found" };
@@ -70,17 +54,17 @@ export default async function ArticlePage(props: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await props.params;
-  const article = getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     notFound();
   }
 
-  const related = getRelatedArticles(article);
+  const related = await getRelatedArticles(article.category, article._id);
   const categoryColor = CATEGORY_TEXT_COLORS[article.category] || "text-accent";
   const articleUrl = `https://thedronepost.in/articles/${slug}`;
 
-  // Structured data for SEO — built from our own mock data, safe to serialize
+  // Structured data for SEO
   const jsonLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Article",
@@ -126,6 +110,7 @@ export default async function ArticlePage(props: {
                 priority
                 sizes="100vw"
                 className="object-cover"
+                unoptimized
               />
             </div>
           </div>
@@ -177,14 +162,8 @@ export default async function ArticlePage(props: {
             <ShareButtons title={article.title} url={articleUrl} />
           </div>
 
-          {/* Article Body — mock paragraphs until Sanity Portable Text */}
-          <div className="space-y-6">
-            {MOCK_BODY.map((paragraph, i) => (
-              <p key={i} className="text-base leading-[1.8] text-text">
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          {/* Article Body — Portable Text from Sanity, or mock fallback */}
+          <PortableTextBody body={article.body} />
 
           {/* Tags */}
           {article.tags && article.tags.length > 0 && (

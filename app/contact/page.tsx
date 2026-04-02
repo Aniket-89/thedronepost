@@ -127,7 +127,7 @@ export default function ContactPage() {
       </div>
 
       {/* Services CTA */}
-      <div className="bg-bg-dark px-8 py-16">
+      <div className="bg-bg-dark px-8 py-16 mb-16">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold font-heading text-white mb-4">
             Looking for Our Services?
