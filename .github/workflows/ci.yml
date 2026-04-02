@@ -34,7 +34,7 @@ jobs:
       - name: Verify Build
         # Expose dummy vars so Next.js doesn't fail if it requires env during build time parsing
         env:
-          NEXT_PUBLIC_SANITY_PROJECT_ID: "dummy_id"
+          NEXT_PUBLIC_SANITY_PROJECT_ID: "dummy-id"
           NEXT_PUBLIC_SANITY_DATASET: "production"
           NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
         run: npm run build
