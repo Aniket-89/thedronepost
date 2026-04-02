@@ -53,6 +53,7 @@ function GuideCard({ article }: { article: Article }) {
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
             className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            unoptimized
           />
         </div>
       )}

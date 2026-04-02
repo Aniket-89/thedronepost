@@ -2,9 +2,12 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import { ArticleFilters } from "@/components/articles/ArticleFilters";
 import { ArticleCard } from "@/components/shared/ArticleCard";
-import { mockArticles } from "@/lib/mock-data";
+import { getAllArticles, getArticlesByCategory } from "@/lib/sanity";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { NewsletterInline } from "@/components/shared/NewsletterInline";
+
+/** Revalidate articles listing every 60 seconds (ISR) */
+export const revalidate = 60;
 
 export async function generateMetadata(props: {
   searchParams: Promise<{ category?: string }>;
@@ -27,9 +30,9 @@ export default async function ArticlesPage(props: {
   const searchParams = await props.searchParams;
   const category = searchParams.category;
 
-  const filtered = category
-    ? mockArticles.filter((a) => a.category === category)
-    : mockArticles;
+  const articles = category
+    ? await getArticlesByCategory(category)
+    : await getAllArticles();
 
   return (
     <section className="py-16 px-8 bg-bg">
@@ -40,7 +43,7 @@ export default async function ArticlesPage(props: {
             {category ? CATEGORY_LABELS[category] || "Articles" : "All Stories"}
           </h1>
           <p className="text-text-muted">
-            {filtered.length} article{filtered.length !== 1 ? "s" : ""}
+            {articles.length} article{articles.length !== 1 ? "s" : ""}
           </p>
         </div>
         <div className="h-1 w-24 bg-accent hidden md:block" />
@@ -52,9 +55,9 @@ export default async function ArticlesPage(props: {
       </Suspense>
 
       {/* Grid */}
-      {filtered.length > 0 ? (
+      {articles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filtered.map((article) => (
+          {articles.map((article) => (
             <ArticleCard key={article._id} article={article} />
           ))}
         </div>

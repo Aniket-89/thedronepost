@@ -16,7 +16,6 @@ const ARTICLE_CATEGORIES = [
 
 const NAV_ITEMS = [
   { label: "Tools", href: "/tools" },
-  { label: "Directory", href: "/directory" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
