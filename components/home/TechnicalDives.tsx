@@ -46,7 +46,7 @@ export function TechnicalDives({ articles }: { articles: Article[] }) {
                 </p>
               )}
               <span className="text-accent font-bold text-xs uppercase inline-flex items-center gap-2">
-                Start Lesson <PlayCircle size={14} />
+                Start Reading <PlayCircle size={14} />
               </span>
             </Link>
           );

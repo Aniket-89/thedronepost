@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CookieBanner } from "@/components/layout/CookieBanner";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-heading",
@@ -54,8 +55,9 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col bg-[#fcf8f8] text-[#1c1b1b] font-body">
         <Navbar />
-        <main className="flex-1 max-w-[1440px] mx-auto w-full">{children}</main>
+        <main className="flex-1 max-w-[1440px] mx-auto w-full pt-16">{children}</main>
         <Footer />
+        <CookieBanner />
       </body>
     </html>
   );

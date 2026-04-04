@@ -162,8 +162,8 @@ export const mockSettings: SiteSettings = {
 };
 
 // Helper functions to filter mock data
-export function getFeaturedArticle(): Article | undefined {
-  return mockArticles.find((a) => a.featured);
+export function getFeaturedArticles(count = 5): Article[] {
+  return mockArticles.filter((a) => a.featured).slice(0, count);
 }
 
 export function getSecondaryArticles(count = 3): Article[] {

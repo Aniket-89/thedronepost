@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Article } from "@/lib/types";
-import { CATEGORY_LABELS } from "@/lib/constants";
+import { CATEGORY_LABELS, FALLBACK_IMAGE_URL } from "@/lib/constants";
 import { Bookmark } from "lucide-react";
 
 // Map categories to border colors
@@ -17,6 +17,7 @@ const CATEGORY_BORDER: Record<string, string> = {
 
 export function ArticleCard({ article }: { article: Article }) {
   const borderColor = CATEGORY_BORDER[article.category] || "border-accent";
+  const imageUrl = article.featuredImage?.asset.url || FALLBACK_IMAGE_URL;
 
   return (
     <Link
@@ -24,18 +25,16 @@ export function ArticleCard({ article }: { article: Article }) {
       className="group block bg-surface border border-border-subtle hover:border-accent transition-colors"
     >
       {/* Image — grayscale, color on hover */}
-      {article.featuredImage && (
-        <div className="aspect-video relative overflow-hidden">
-          <Image
-            src={article.featuredImage.asset.url}
-            alt={article.featuredImage.alt || article.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-            unoptimized
-          />
-        </div>
-      )}
+      <div className="aspect-video relative overflow-hidden">
+        <Image
+          src={imageUrl}
+          alt={article.featuredImage?.alt || article.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+          unoptimized
+        />
+      </div>
 
       {/* Content */}
       <div className="p-6">
