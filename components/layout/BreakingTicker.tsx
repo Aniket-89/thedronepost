@@ -5,7 +5,7 @@ export function BreakingTicker({ headlines }: { headlines: string[] }) {
   const doubled = [...headlines, ...headlines];
 
   return (
-    <div className="bg-surface-dim border-b border-white/10 overflow-hidden">
+    <div className="bg-bg-dark border-b border-white/10 overflow-hidden">
       <div className="flex items-center">
         <span className="shrink-0 bg-accent text-white text-xs font-heading font-semibold px-3 py-1.5 uppercase tracking-wide">
           Breaking

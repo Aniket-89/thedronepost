@@ -14,10 +14,6 @@ export default defineConfig({
   projectId,
   dataset,
   basePath: "/studio",
-  deployment: {
-    appId: 'g2rccx8qanhjoatra0s9i2ya',
-    autoUpdates: true
-  },
   plugins: [
     structureTool({
       structure: (S) =>
