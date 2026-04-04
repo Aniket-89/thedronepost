@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Search, Menu, ChevronDown } from "lucide-react";
 import { MobileNav } from "./MobileNav";
+import { SearchModal } from "./SearchModal";
 
 const ARTICLE_CATEGORIES = [
   { label: "All Articles", href: "/articles" },
@@ -23,8 +24,29 @@ const NAV_ITEMS = [
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showNav, setShowNav] = useState(true);
+  
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY < 50) {
+        setShowNav(true);
+      } else if (currentScrollY > lastScrollY.current) {
+        setShowNav(false);
+      } else {
+        setShowNav(true);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -36,9 +58,25 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full bg-[#0A0A0A] border-b border-accent">
+      <nav 
+        className={`sticky top-0 z-50 w-full bg-[#0A0A0A] border-b border-accent transition-transform duration-300 ease-in-out ${
+          showNav ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="flex justify-between items-center px-8 py-4">
           {/* Left: Logo + Links */}
           <div className="flex items-center gap-8">
@@ -89,11 +127,23 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Right */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-6">
+            {/* Desktop Fake Search Input */}
             <button
+              onClick={() => setSearchOpen(true)}
               aria-label="Search"
-              className="text-white cursor-pointer hover:text-accent transition-colors"
+              className="hidden md:flex items-center gap-2 bg-bg border border-transparent hover:border-accent text-text-muted hover:text-text px-3 py-2 transition-colors w-48 lg:w-60 text-sm text-left shadow-sm"
+            >
+              <Search size={14} />
+              <span className="flex-1">Search...</span>
+              <kbd className="hidden lg:inline-block text-[10px] font-sans font-bold border border-border-subtle bg-surface px-1.5 py-0.5 text-text-muted rounded-sm">⌘K</kbd>
+            </button>
+            
+            {/* Mobile Search Icon */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+              className="md:hidden text-white cursor-pointer hover:text-accent transition-colors"
             >
               <Search size={20} />
             </button>
@@ -115,6 +165,7 @@ export function Navbar() {
       </nav>
 
       <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

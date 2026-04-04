@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
 import { getArticleBySlug, getRelatedArticles, getAllArticleSlugs } from "@/lib/sanity";
 import { formatDate } from "@/lib/utils";
-import { CATEGORY_LABELS, CATEGORY_TEXT_COLORS } from "@/lib/constants";
+import { CATEGORY_LABELS, CATEGORY_TEXT_COLORS, FALLBACK_IMAGE_URL } from "@/lib/constants";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { ArticleCard } from "@/components/shared/ArticleCard";
 import { NewsletterInline } from "@/components/shared/NewsletterInline";
@@ -100,21 +100,19 @@ export default async function ArticlePage(props: {
         </div>
 
         {/* Featured Image — full width */}
-        {article.featuredImage && (
-          <div className="mt-6 px-8">
-            <div className="aspect-[21/9] relative overflow-hidden">
-              <Image
-                src={article.featuredImage.asset.url}
-                alt={article.featuredImage.alt || article.title}
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover"
-                unoptimized
-              />
-            </div>
+        <div className="mt-6 px-8">
+          <div className="aspect-[21/9] relative overflow-hidden">
+            <Image
+              src={article.featuredImage?.asset.url || FALLBACK_IMAGE_URL}
+              alt={article.featuredImage?.alt || article.title}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+              unoptimized
+            />
           </div>
-        )}
+        </div>
 
         {/* Article Content — centered narrow column */}
         <div className="max-w-[720px] mx-auto px-8 py-12">

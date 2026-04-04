@@ -2,7 +2,7 @@ export { client, serverClient, isSanityConfigured } from "./client";
 export { urlFor } from "./image";
 export type { SanityArticle, SanityImageRef, SanitySiteSettings } from "./types";
 export {
-  getFeaturedArticle,
+  getFeaturedArticles,
   getSecondaryArticles,
   getLatestArticles,
   getTrendingArticles,
