@@ -81,6 +81,35 @@ const components: Partial<PortableTextReactComponents> = {
     number: ({ children }) => <li className="leading-[1.8]">{children}</li>,
   },
   types: {
+    table: ({ value }) => {
+      if (!value || !value.rows || value.rows.length === 0) return null;
+      return (
+        <div className="w-full overflow-x-auto my-8 border border-border-subtle bg-white shadow-sm">
+          <table className="w-full border-collapse text-sm md:text-base">
+            <thead className="bg-[#fcf8f8] border-b border-border-subtle">
+              <tr>
+                {value.rows[0].cells.map((cell: string, i: number) => (
+                  <th key={i} className="px-4 py-3 text-left font-heading font-black tracking-wider text-text-muted uppercase border-r border-border-subtle last:border-r-0">
+                    {cell}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {value.rows.slice(1).map((row: { cells: string[] }, i: number) => (
+                <tr key={i} className="border-b border-border-subtle last:border-b-0 hover:bg-[#fcf8f8]/50 transition-colors">
+                  {row.cells.map((cell: string, j: number) => (
+                    <td key={j} className="px-4 py-3 text-text border-r border-border-subtle last:border-r-0 whitespace-pre-wrap">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    },
     image: ({ value }) => {
       if (!value?.asset) return null;
       const built = urlFor(value);

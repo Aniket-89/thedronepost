@@ -3,6 +3,7 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
+import { table } from "@sanity/table";
 import { schemaTypes } from "./sanity/schemas";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
@@ -40,6 +41,7 @@ export default defineConfig({
           ]),
     }),
     visionTool({ defaultApiVersion: "2024-03-01" }),
+    table(),
   ],
   schema: { types: schemaTypes },
 });
