@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import Fuse from "fuse.js";
 import { Search, X, Loader2, ArrowRight } from "lucide-react";
@@ -22,7 +22,6 @@ export function SearchModal({
   onClose: () => void;
 }) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
   const [articles, setArticles] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -31,18 +30,19 @@ export function SearchModal({
   // Fetch articles on first open
   useEffect(() => {
     if (open && !hasLoaded) {
-      setIsLoading(true);
-      fetch("/api/search")
-        .then((res) => res.json())
-        .then((data) => {
-          setArticles(data || []);
+      const loadData = async () => {
+        setIsLoading(true);
+        try {
+          const res = await fetch("/api/search");
+          setArticles((await res.json()) || []);
           setHasLoaded(true);
-          setIsLoading(false);
-        })
-        .catch((err) => {
+        } catch (err) {
           console.error("Failed to load search index", err);
+        } finally {
           setIsLoading(false);
-        });
+        }
+      };
+      loadData();
     }
 
     if (open) {
@@ -63,28 +63,23 @@ export function SearchModal({
     } else {
       document.body.style.overflow = "";
       setQuery("");
-      setResults([]);
     }
-  }, [open, hasLoaded]);
+  }, [open, hasLoaded, onClose]);
 
-  // Perform fuzzy search
-  useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      return;
-    }
+  // Perform fuzzy search using derived state (avoids syncing state inside effects)
+  const fuse = useMemo(() => {
+    if (!articles || articles.length === 0) return null;
+    return new Fuse(articles, {
+      keys: ["title", "excerpt", "category"],
+      threshold: 0.3,
+      distance: 100,
+    });
+  }, [articles]);
 
-    if (articles.length > 0) {
-      const fuse = new Fuse(articles, {
-        keys: ["title", "excerpt", "category"],
-        threshold: 0.3,
-        distance: 100,
-      });
-
-      const rawResults = fuse.search(query);
-      setResults(rawResults.map((r) => r.item));
-    }
-  }, [query, articles]);
+  const results = useMemo(() => {
+    if (!query.trim() || !fuse) return [];
+    return fuse.search(query).map((r) => r.item);
+  }, [query, fuse]);
 
   if (!open) return null;
 
