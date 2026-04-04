@@ -138,6 +138,9 @@ export const article = defineType({
           },
         },
         {
+          type: "table",
+        },
+        {
           type: "image",
           options: { hotspot: true },
           fields: [

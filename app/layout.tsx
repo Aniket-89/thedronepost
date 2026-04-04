@@ -42,6 +42,8 @@ export const metadata: Metadata = {
   },
 };
 
+import Script from "next/script";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -53,6 +55,24 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${spaceGrotesk.variable} ${inter.variable} scroll-smooth antialiased`}
     >
+      <head>
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-2JPLLBHEKY"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-2JPLLBHEKY');
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-[#fcf8f8] text-[#1c1b1b] font-body">
         <Navbar />
         <main className="flex-1 max-w-[1440px] mx-auto w-full pt-16">{children}</main>
