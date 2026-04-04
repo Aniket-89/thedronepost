@@ -9,7 +9,7 @@ import { NewsletterBand } from "@/components/home/NewsletterBand";
 import { ServicesStrip } from "@/components/home/ServicesStrip";
 import {
   getSiteSettings,
-  getFeaturedArticle,
+  getFeaturedArticles,
   getSecondaryArticles,
   getLatestArticles,
   getTrendingArticles,
@@ -24,7 +24,7 @@ export default async function Home() {
   const [settings, featured, secondary, latest, trending, technical, companies] =
     await Promise.all([
       getSiteSettings(),
-      getFeaturedArticle(),
+      getFeaturedArticles(4),
       getSecondaryArticles(3),
       getLatestArticles(6),
       getTrendingArticles(4),
@@ -40,7 +40,7 @@ export default async function Home() {
       )}
 
       {/* Hero: Featured + Secondary Articles */}
-      {featured && <HeroSection featured={featured} secondary={secondary} />}
+      {featured && featured.length > 0 && <HeroSection featured={featured} secondary={secondary} />}
 
       {/* Latest Stories Grid */}
       <LatestStories articles={latest} />
