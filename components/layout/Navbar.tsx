@@ -77,7 +77,7 @@ export function Navbar() {
           showNav ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="flex justify-between items-center px-8 py-4">
+        <div className="flex justify-between items-center max-w-[1920px] mx-auto px-8 py-4">
           {/* Left: Logo + Links */}
           <div className="flex items-center gap-8">
             <Link href="/" className="shrink-0">
