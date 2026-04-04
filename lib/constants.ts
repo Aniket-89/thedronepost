@@ -90,5 +90,3 @@ export const TOOLS = [
     available: false,
   },
 ] as const;
-
-export const FALLBACK_IMAGE_URL = "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=1200&q=80";

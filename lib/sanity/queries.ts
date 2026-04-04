@@ -3,7 +3,7 @@ import type { SanityArticle, SanitySiteSettings } from "./types";
 import type { Article, SiteSettings } from "../types";
 import {
   mockSettings,
-  getFeaturedArticles as mockGetFeatured,
+  getFeaturedArticle as mockGetFeatured,
   getSecondaryArticles as mockGetSecondary,
   getLatestArticles as mockGetLatest,
   getTrendingArticles as mockGetTrending,
@@ -67,7 +67,7 @@ const ARTICLE_FULL_PROJECTION = `{
 // ---------------------------------------------------------------------------
 
 const FEATURED_ARTICLE_QUERY = `
-  *[_type == "article" && featured == true] | order(publishedAt desc)[0...$count]
+  *[_type == "article" && featured == true] | order(publishedAt desc)[0]
   ${ARTICLE_CARD_PROJECTION}
 `;
 
@@ -157,39 +157,39 @@ async function sanityFetch<T>(
 // Public data-fetching functions (used by pages)
 // ---------------------------------------------------------------------------
 
-export async function getFeaturedArticles(count = 5): Promise<Article[]> {
-  const result = await sanityFetch<SanityArticle[]>(FEATURED_ARTICLE_QUERY, { count });
-  if (result && result.length > 0) return result as Article[];
-  return mockGetFeatured(count);
+export async function getFeaturedArticle(): Promise<Article | undefined> {
+  const result = await sanityFetch<SanityArticle>(FEATURED_ARTICLE_QUERY);
+  if (result) return result as Article;
+  return mockGetFeatured();
 }
 
 export async function getSecondaryArticles(count = 3): Promise<Article[]> {
   const result = await sanityFetch<SanityArticle[]>(SECONDARY_ARTICLES_QUERY, { count });
-  if (result && result.length > 0) return result as Article[];
+  if (result?.length) return result as Article[];
   return mockGetSecondary(count);
 }
 
 export async function getLatestArticles(count = 6): Promise<Article[]> {
   const result = await sanityFetch<SanityArticle[]>(LATEST_ARTICLES_QUERY, { count });
-  if (result && result.length > 0) return result as Article[];
+  if (result?.length) return result as Article[];
   return mockGetLatest(count);
 }
 
 export async function getTrendingArticles(count = 4): Promise<Article[]> {
   const result = await sanityFetch<SanityArticle[]>(TRENDING_ARTICLES_QUERY, { count });
-  if (result && result.length > 0) return result as Article[];
+  if (result?.length) return result as Article[];
   return mockGetTrending(count);
 }
 
 export async function getTechnicalArticles(count = 4): Promise<Article[]> {
   const result = await sanityFetch<SanityArticle[]>(TECHNICAL_ARTICLES_QUERY, { count });
-  if (result && result.length > 0) return result as Article[];
+  if (result?.length) return result as Article[];
   return mockGetTechnical(count);
 }
 
 export async function getCompanyArticles(count = 2): Promise<Article[]> {
   const result = await sanityFetch<SanityArticle[]>(COMPANY_ARTICLES_QUERY, { count });
-  if (result && result.length > 0) return result as Article[];
+  if (result?.length) return result as Article[];
   return mockGetCompany(count);
 }
 
@@ -197,7 +197,7 @@ export async function getGuideArticles(): Promise<{ beginner: Article[]; advance
   const result = await sanityFetch<{ beginner: SanityArticle[]; advanced: SanityArticle[] }>(
     GUIDE_ARTICLES_QUERY,
   );
-  if (result !== null && (result.beginner?.length > 0 || result.advanced?.length > 0)) {
+  if (result?.beginner?.length || result?.advanced?.length) {
     return result as { beginner: Article[]; advanced: Article[] };
   }
   return mockGetGuides();
@@ -205,8 +205,7 @@ export async function getGuideArticles(): Promise<{ beginner: Article[]; advance
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   const result = await sanityFetch<SanityArticle>(ARTICLE_BY_SLUG_QUERY, { slug });
-  if (result !== null) return result as Article;
-  
+  if (result) return result as Article;
   // Fallback: search mock data
   const mock = mockArticles.find((a) => a.slug.current === slug);
   return mock ?? null;
@@ -214,19 +213,19 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 
 export async function getArticlesByCategory(category: string): Promise<Article[]> {
   const result = await sanityFetch<SanityArticle[]>(ARTICLES_BY_CATEGORY_QUERY, { category });
-  if (result && result.length > 0) return result as Article[];
+  if (result?.length) return result as Article[];
   return mockArticles.filter((a) => a.category === category);
 }
 
 export async function getAllArticles(): Promise<Article[]> {
   const result = await sanityFetch<SanityArticle[]>(ALL_ARTICLES_QUERY);
-  if (result && result.length > 0) return result as Article[];
+  if (result?.length) return result as Article[];
   return mockArticles;
 }
 
 export async function getAllArticleSlugs(): Promise<string[]> {
   const result = await sanityFetch<string[]>(ALL_ARTICLE_SLUGS_QUERY);
-  if (result && result.length > 0) return result;
+  if (result?.length) return result;
   return mockArticles.map((a) => a.slug.current);
 }
 
@@ -240,8 +239,7 @@ export async function getRelatedArticles(
     excludeId,
     count,
   });
-  if (result && result.length > 0) return result as Article[];
-  
+  if (result?.length) return result as Article[];
   return mockArticles
     .filter((a) => a.category === category && a._id !== excludeId)
     .slice(0, count);
@@ -249,6 +247,6 @@ export async function getRelatedArticles(
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   const result = await sanityFetch<SanitySiteSettings>(SITE_SETTINGS_QUERY);
-  if (result !== null) return result;
+  if (result) return result;
   return mockSettings;
 }
